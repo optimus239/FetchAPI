@@ -1,0 +1,43 @@
+.movie-list {
+  background-color: rgb(33, 33, 33);
+}
+
+.movie-list .slick-prev {
+  background-color: rgb(33, 33, 33) !important;
+}
+.movie-list .slick-next {
+  background-color: rgb(33, 33, 33) !important;
+}
+
+.movie-list .slick-prev:before {
+  color: rgb(87, 84, 84);
+}
+.movie-list .slick-next:before {
+  color: rgba(87, 84, 84);
+}
+
+.movie-list .slick-slider {
+  margin: 0 auto;
+  width: 85%;
+}
+
+.movie-list .ant-card {
+  margin: 10px;
+}
+
+.movie-list .btn-playing {
+  border: 1px solid #fff;
+}
+
+.movie-list .btn-coming {
+  border: 1px solid #fff;
+}
+
+.movie-list .btn-playing p,
+.movie-list .btn-coming p {
+  color: #fff;
+}
+
+.width-item {
+  width: 100% !important;
+}
