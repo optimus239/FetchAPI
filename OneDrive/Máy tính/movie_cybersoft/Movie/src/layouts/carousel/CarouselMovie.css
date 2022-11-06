@@ -1,0 +1,19 @@
+.ant-carousel .carousel-movie .slick-dots li {
+  display: none !important;
+}
+
+@media only screen and (max-width: 768px) {
+  .ant-carousel {
+    width: 100%;
+    background: linear-gradient(
+      90deg,
+      rgba(19, 18, 38, 1) 10%,
+      rgba(9, 9, 121, 1) 52%,
+      rgba(0, 212, 255, 1) 100%,
+      rgba(215, 15, 57, 1) 100%
+    );
+  }
+  .ant-carousel .bg-carousel-top {
+    height: 300px !important;
+  }
+}

@@ -1,12 +1,13 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import { redirect } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const initialState = {
   movieList: [],
   isFetching: false,
   error: undefined,
   carouselList: [],
-  cinemaList: [],
   movieDetail: undefined,
 };
 
@@ -17,6 +18,7 @@ export const { reducer: quanLyPhimReducer, actions: quanLyPhimActions } =
     reducers: {},
     extraReducers: (builder) => {
       builder
+        // getMovieList
         .addCase(getMovieList.pending, (state, action) => {
           state.isFetching = true;
         })
@@ -27,12 +29,12 @@ export const { reducer: quanLyPhimReducer, actions: quanLyPhimActions } =
         .addCase(getMovieList.rejected, (state, action) => {
           state.isFetching = false;
           state.error = action.payload;
-        });
-      builder.addCase(getCarouselList.pending, (state, action) => {
-        state.isFetching = true;
-      });
+        })
 
-      builder
+        // getCarouselList
+        .addCase(getCarouselList.pending, (state, action) => {
+          state.isFetching = true;
+        })
         .addCase(getCarouselList.fulfilled, (state, action) => {
           state.isFetching = false;
           state.carouselList = action.payload;
@@ -40,31 +42,87 @@ export const { reducer: quanLyPhimReducer, actions: quanLyPhimActions } =
         .addCase(getCarouselList.rejected, (state, action) => {
           state.isFetching = false;
           state.error = action.payload;
-        });
-
-      builder.addCase(getCinemaList.pending, (state, action) => {
-        state.isFetching = true;
-      });
-      builder
-        .addCase(getCinemaList.fulfilled, (state, action) => {
-          state.isFetching = false;
-          state.cinemaList = action.payload;
         })
-        .addCase(getCinemaList.rejected, (state, action) => {
+
+        // getMovieDetail
+        .addCase(getMovieDetail.pending, (state, action) => {
+          state.isFetching = true;
+        })
+        .addCase(getMovieDetail.fulfilled, (state, action) => {
+          state.isFetching = false;
+          state.movieDetail = action.payload;
+        })
+        .addCase(getMovieDetail.rejected, (state, action) => {
           state.isFetching = false;
           state.error = action.payload;
+        })
+
+        // Thêm phim upload hình
+        .addCase(themPhimUploadHinh.pending, (state, action) => {
+          state.isFetching = true;
+        })
+        .addCase(themPhimUploadHinh.fulfilled, (state, action) => {
+          state.isFetching = false;
+          console.log(action.payload);
+          Swal.fire("Thành Công!", "Bạn đã thêm phim thành công!", "success");
+          localStorage.setItem("filmparams", JSON.stringify(action.payload));
+          redirect("/admin/films");
+        })
+        .addCase(themPhimUploadHinh.rejected, (state, action) => {
+          state.error = action.payload;
+          state.isFetching = false;
+          Swal.fire({
+            icon: "error",
+            title: "Thất bại...",
+            text: action.payload.content,
+            footer: '<a href="">Xin cảm ơn</a>',
+          });
+        })
+
+        // Xóa phim
+        .addCase(xoaPhim.pending, (state, action) => {
+          state.isFetching = true;
+        })
+        .addCase(xoaPhim.fulfilled, (state, action) => {
+          state.isFetching = false;
+          console.log(action.payload);
+          Swal.fire("Thành Công!", "Bạn đã xóa phim thành công!", "success");
+        })
+        .addCase(xoaPhim.rejected, (state, action) => {
+          state.error = action.payload;
+          state.isFetching = false;
+          Swal.fire({
+            icon: "error",
+            title: "Thất bại...",
+            text: action.payload.content,
+            footer: '<a href="">Xin cảm ơn</a>',
+          });
+        })
+
+        // Cập nhật phim Upload
+        .addCase(updateMovie.pending, (state, action) => {
+          state.isFetching = true;
+        })
+        .addCase(updateMovie.fulfilled, (state, action) => {
+          state.isFetching = false;
+          console.log(action.payload);
+          Swal.fire(
+            "Thành Công!",
+            "Bạn đã cập nhật phim thành công!",
+            "success"
+          );
+        })
+        .addCase(updateMovie.rejected, (state, action) => {
+          state.error = action.payload;
+          console.log(action.payload);
+          state.isFetching = false;
+          Swal.fire({
+            icon: "error",
+            title: "Thất bại...",
+            text: action.payload,
+            footer: '<a href="">Xin cảm ơn</a>',
+          });
         });
-      builder.addCase(getMovieDetail.pending, (state, action) => {
-        state.isFetching = true;
-      });
-      builder.addCase(getMovieDetail.fulfilled, (state, action) => {
-        state.isFetching = false;
-        state.movieDetail = action.payload;
-      });
-      builder.addCase(getMovieDetail.rejected, (state, action) => {
-        state.isFetching = false;
-        state.error = action.payload;
-      });
     },
   });
 
@@ -73,7 +131,7 @@ export const getMovieList = createAsyncThunk(
   async (data, { dispatch, getState, rejectWithValue }) => {
     try {
       const result = await axios({
-        url: "https://movienew.cybersoft.edu.vn/api/QuanLyPhim/LayDanhSachPhim?maNhom=GP01",
+        url: "https://movienew.cybersoft.edu.vn/api/QuanLyPhim/LayDanhSachPhim?maNhom=GP13",
         method: "GET",
         headers: {
           TokenCyberSoft:
@@ -106,25 +164,6 @@ export const getCarouselList = createAsyncThunk(
   }
 );
 
-export const getCinemaList = createAsyncThunk(
-  "quanLyPhim/getCinameList",
-  async (data, { rejectWithValue }) => {
-    try {
-      const result = await axios({
-        url: "https://movienew.cybersoft.edu.vn/api/QuanLyRap/LayThongTinLichChieuHeThongRap?maNhom=GP01",
-        method: "GET",
-        headers: {
-          TokenCyberSoft:
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZW5Mb3AiOiJCb290Y2FtcCAzMkUiLCJIZXRIYW5TdHJpbmciOiIyMC8wMy8yMDIzIiwiSGV0SGFuVGltZSI6IjE2NzkyNzA0MDAwMDAiLCJuYmYiOjE2NTA0NzQwMDAsImV4cCI6MTY3OTQxODAwMH0.S7l5kogAVJjRW8mjJ5gosJraYq5ahYjrBwnMJAaGxlY",
-        },
-      });
-      return result.data.content;
-    } catch (err) {
-      return rejectWithValue(err.response.data);
-    }
-  }
-);
-
 export const getMovieDetail = createAsyncThunk(
   "quanLyPhim/getMovieDetail",
   async (movieId, { rejectWithValue }) => {
@@ -137,9 +176,72 @@ export const getMovieDetail = createAsyncThunk(
             "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZW5Mb3AiOiJCb290Y2FtcCAzMkUiLCJIZXRIYW5TdHJpbmciOiIyMC8wMy8yMDIzIiwiSGV0SGFuVGltZSI6IjE2NzkyNzA0MDAwMDAiLCJuYmYiOjE2NTA0NzQwMDAsImV4cCI6MTY3OTQxODAwMH0.S7l5kogAVJjRW8mjJ5gosJraYq5ahYjrBwnMJAaGxlY",
         },
       });
+      console.log(result.data.content);
       return result.data.content;
     } catch (err) {
       return rejectWithValue(err.respone.data);
+    }
+  }
+);
+
+export const themPhimUploadHinh = createAsyncThunk(
+  "quanLyPhim/themPhimUploadHinh",
+  async (data, { dispatch, getState, rejectWithValue }) => {
+    try {
+      const result = await axios({
+        url: "https://movienew.cybersoft.edu.vn/api/QuanLyPhim/ThemPhimUploadHinh",
+        method: "POST",
+        headers: {
+          TokenCyberSoft:
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZW5Mb3AiOiJCb290Y2FtcCAzMkUiLCJIZXRIYW5TdHJpbmciOiIyMC8wMy8yMDIzIiwiSGV0SGFuVGltZSI6IjE2NzkyNzA0MDAwMDAiLCJuYmYiOjE2NTA0NzQwMDAsImV4cCI6MTY3OTQxODAwMH0.S7l5kogAVJjRW8mjJ5gosJraYq5ahYjrBwnMJAaGxlY",
+        },
+        data,
+      });
+      return result.data.content;
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+
+export const xoaPhim = createAsyncThunk(
+  "quanLyPhim/xoaPhim",
+  async (maPhim, { dispatch, getState, rejectWithValue }) => {
+    try {
+      const result = await axios({
+        url: `https://movienew.cybersoft.edu.vn/api/QuanLyPhim/XoaPhim?MaPhim=${maPhim}`,
+        method: "DELETE",
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("TOKEN"),
+          TokenCyberSoft:
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZW5Mb3AiOiJCb290Y2FtcCAzMkUiLCJIZXRIYW5TdHJpbmciOiIyMC8wMy8yMDIzIiwiSGV0SGFuVGltZSI6IjE2NzkyNzA0MDAwMDAiLCJuYmYiOjE2NTA0NzQwMDAsImV4cCI6MTY3OTQxODAwMH0.S7l5kogAVJjRW8mjJ5gosJraYq5ahYjrBwnMJAaGxlY",
+        },
+      });
+      dispatch(getMovieList());
+      return result.data.content;
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+
+export const updateMovie = createAsyncThunk(
+  "quanLyPhim/updateMovie",
+  async (data, { dispatch, getState, rejectWithValue }) => {
+    try {
+      const result = await axios({
+        url: "https://movienew.cybersoft.edu.vn/api/QuanLyPhim/CapNhatPhimUpload",
+        method: "POST",
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("TOKEN"),
+          TokenCyberSoft:
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZW5Mb3AiOiJCb290Y2FtcCAzMkUiLCJIZXRIYW5TdHJpbmciOiIyMC8wMy8yMDIzIiwiSGV0SGFuVGltZSI6IjE2NzkyNzA0MDAwMDAiLCJuYmYiOjE2NTA0NzQwMDAsImV4cCI6MTY3OTQxODAwMH0.S7l5kogAVJjRW8mjJ5gosJraYq5ahYjrBwnMJAaGxlY",
+        },
+        data,
+      });
+      return result.data.content;
+    } catch (err) {
+      return rejectWithValue(err.response.data);
     }
   }
 );

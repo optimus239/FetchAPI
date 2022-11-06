@@ -1,0 +1,23 @@
+@media only screen and (max-width: 1024px) {
+  .navbar-res {
+    width: 50%;
+  }
+}
+
+@media only screen and (max-width: 576px) {
+  .navbar-res {
+    width: 20%;
+  }
+  .navbar-user {
+    padding: 0;
+  }
+}
+
+@media only screen and (max-width: 500px) {
+  .logo-cybersoft {
+    font-size: 15px;
+  }
+  .navbar-user {
+    font-size: 10px;
+  }
+}

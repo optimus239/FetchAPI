@@ -1,14 +1,168 @@
-.bg-movieDetail {
-  position: absolute;
-  margin: 0 auto;
-  width: 90%;
-  height: 90%;
+.movie-detail {
+  width: 100%;
+  height: 100%;
   background: rgba(16, 18, 27, 0.5);
   border: 1px solid rgba(255, 255, 255, 0.18);
   border-radius: 10px;
   backdrop-filter: blur(2px);
-  top: 7%;
-  left: 0;
-  right: 0;
-  bottom: 8%;
+}
+
+.movie-name {
+  font-size: 33px;
+  background: -webkit-linear-gradient(#ea0606, #dcc83b);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.btn-date-movie {
+  background: linear-gradient(
+    90deg,
+    rgba(131, 58, 180, 1) 0%,
+    rgba(248, 244, 251, 1) 0%,
+    rgba(248, 245, 251, 1) 47%,
+    rgba(255, 255, 255, 0.7432015042345064) 100%,
+    rgba(252, 176, 69, 1) 100%
+  );
+}
+
+.detail-trailer {
+  display: flex;
+  box-shadow: rgb(44, 62, 80) 0px 0px 15px 0px;
+  width: 30%;
+  background-color: rgb(255, 252, 252);
+}
+
+.tabs {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+  font-weight: 700;
+  width: 50%;
+}
+
+.tabs.active-tabs {
+  margin-left: 20px;
+}
+
+.movie-des {
+  display: none;
+  color: rgb(228 228 231);
+  font-weight: 600;
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.movie-des.active-content {
+  display: block;
+}
+
+.btn-movie-trailer {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+  font-weight: 700;
+  width: 50%;
+  border-left: 1px solid rgb(25, 144, 177);
+}
+
+.btn-movie-trailer.trailer-active {
+  margin-right: 20px;
+}
+
+@media only screen and (max-width: 1100px) {
+  .detail-trailer {
+    padding: 10px 0;
+    width: 50%;
+  }
+}
+
+@media only screen and (max-width: 1024px) {
+  .movie-detail-img {
+    width: 30%;
+  }
+  .movie-des {
+    width: 70%;
+  }
+}
+
+@media only screen and (max-width: 992px) {
+  .movie-detail-time {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .showtime-detail {
+    flex-wrap: wrap;
+  }
+  .showtime-detail-img {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+  .movie-detail-top {
+    flex-wrap: wrap;
+  }
+  .movie-detail-img {
+    width: 100%;
+    margin-right: 0;
+  }
+  .movie-detail-img img {
+    width: 60%;
+    margin: 0 auto;
+  }
+  .movie-name {
+    margin-top: 10px;
+    margin-bottom: 0;
+  }
+  .movie-description {
+    width: 100%;
+    text-align: center;
+  }
+  .detail-trailer {
+    margin: 0 auto;
+  }
+  .clearfix {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+  }
+  .movie-des {
+    text-align: left;
+    margin: 10px auto 0;
+  }
+  .movie-detail-time {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  .ant-tabs-tabpane {
+    padding-left: 4px !important;
+  }
+  .ant-tabs-left > .ant-tabs-nav .ant-tabs-tab {
+    padding: 0 0 20px !important;
+  }
+  .img-cinema-showtime {
+    width: 40%;
+  }
+  .ant-rate {
+    padding-top: 34px;
+  }
+}
+
+@media only screen and (max-width: 620px) {
+  .detail-trailer {
+    padding: 10px 0;
+    width: 80%;
+  }
+  .movie-detail-time {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media only screen and (max-width: 500px) {
+  .detail-trailer {
+    padding: 10px 0;
+    width: 90%;
+  }
+  .movie-detail-time {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }

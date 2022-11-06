@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import { login, useQuanLyNguoiDung } from "../../store/quanLyNguoiDung";
 
@@ -22,13 +22,17 @@ const Login = () => {
     // console.log(data);
     dispatch(login(data));
   };
+  const navigate = useNavigate();
 
-  if (userLogin) {
-    return <Navigate replace to="/home" />;
-  }
+  useEffect(() => {
+    if (userLogin) {
+      console.log("gì dọ");
+      navigate(-1);
+    }
+  }, [userLogin]);
 
   return (
-    <div className="container mx-auto">
+    <div className="container mx-auto pt-[72.5px]">
       <section className="h-screen">
         <div className="px-6 h-full text-gray-800">
           <div className="flex xl:justify-center lg:justify-between justify-center items-center flex-wrap h-full g-6">

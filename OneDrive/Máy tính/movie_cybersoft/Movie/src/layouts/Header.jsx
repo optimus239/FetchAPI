@@ -1,18 +1,70 @@
-import React from "react";
+import React, { useRef } from "react";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { logOut, useQuanLyNguoiDung } from "../store/quanLyNguoiDung";
+import { Dropdown, Menu, Space } from "antd";
 
 const Header = () => {
+  const { userLogin } = useQuanLyNguoiDung();
+  console.log("userLogin: ", userLogin);
+  const dispatch = useDispatch();
+  const dangXuat = () => {
+    dispatch(logOut());
+  };
   const [navbarOpen, setNavbarOpen] = useState(false);
+
+  // Menudropdown
+
+  const item = [
+    {
+      label: (
+        <Link rel="noopener noreferrer" to="/user">
+          Tài Khoản
+        </Link>
+      ),
+      key: "0",
+    },
+    userLogin?.maLoaiNguoiDung === "QuanTri"
+      ? {
+          label: (
+            <Link rel="noopener noreferrer" to="/admin">
+              Quản trị
+            </Link>
+          ),
+          key: "1",
+        }
+      : undefined,
+    {
+      type: "divider",
+    },
+    {
+      label: <span onClick={dangXuat}>Đăng xuất</span>,
+      key: "3",
+      // disabled: true,
+    },
+  ];
+  const menu = <Menu items={item} />;
+
   console.log("navbarOpen: ", navbarOpen);
+
+  const titleRef = useRef();
+  console.log("navbarOpen: ", navbarOpen);
+  const navigate = useNavigate();
   return (
     <>
-      <Navbar className="flex flex-wrap items-center justify-between px-2 py-5 bg-transparent fixed mb-3 z-10 w-full ">
-        <div className="container px-4 mx-auto flex flex-wrap items-center justify-between">
-          <div className="w-full relative flex justify-between lg:w-auto lg:static lg:block lg:justify-start">
+      <Navbar
+        className="flex flex-wrap items-center justify-between px-2 py-3 z-10 w-full container"
+        style={{ backgroundColor: "rgb(33, 33, 33)" }}
+      >
+        <div className="container px-4 flex flex-wrap items-center justify-between">
+          <NavLink
+            className="w-full relative flex justify-between lg:w-auto lg:static lg:block lg:justify-start"
+            to="/home"
+          >
             <a
-              className="uppercase text-red-700 font-bold text-lg items-center"
+              className="uppercase text-red-700 font-bold text-2xl items-center"
               href="#pablo"
             >
               Cybersoft
@@ -24,7 +76,7 @@ const Header = () => {
             >
               <i className="fas fa-bars"></i>
             </button>
-          </div>
+          </NavLink>
           <div
             className={
               "lg:flex flex-grow items-center" +
@@ -39,7 +91,9 @@ const Header = () => {
                   href="#pablo"
                 >
                   <i className="text-lg text-white opacity-75"></i>
-                  <span className="ml-2">Trang chủ</span>
+                  <NavLink className="ml-2 text-white" to="/home">
+                    Trang chủ
+                  </NavLink>
                 </a>
               </li>
               <li className="nav-item">
@@ -63,12 +117,45 @@ const Header = () => {
             </ul>
           </div>
           <div className="flex">
-            <button className="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-75">
-              <Link to="/register">Đăng ký</Link>
-            </button>
-            <button className="ml-3 px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-75">
-              <Link to="/login">Đăng nhập</Link>
-            </button>
+            {userLogin ? (
+              <div className="px-3 flex items-center text-xs uppercase font-bold  text-white ">
+                <span className="mr-2">Xin Chào</span>
+                <Dropdown overlay={menu} placement="bottomLeft" arrow>
+                  <a onClick={(e) => e.preventDefault()}>
+                    <Space>
+                      <span className="flex items-center">
+                        <img
+                          className="w-full rounded-full"
+                          src="https://api.lorem.space/image/game?w=50&h=50"
+                          alt="..."
+                        />
+                      </span>
+
+                      {userLogin?.hoTen}
+                    </Space>
+                  </a>
+                </Dropdown>
+              </div>
+            ) : (
+              <>
+                <button
+                  className="px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-75"
+                  onClick={() => {
+                    navigate("/register");
+                  }}
+                >
+                  Đăng ký
+                </button>
+                <button
+                  className="ml-3 px-3 py-2 flex items-center text-xs uppercase font-bold leading-snug text-white hover:opacity-75"
+                  onClick={() => {
+                    navigate("/login");
+                  }}
+                >
+                  Đăng nhập
+                </button>
+              </>
+            )}
           </div>
         </div>
       </Navbar>
